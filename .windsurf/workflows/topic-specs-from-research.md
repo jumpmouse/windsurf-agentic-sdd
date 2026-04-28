@@ -6,25 +6,18 @@ description: Turn topic research artifacts into canonical spec set and a ticket 
 
 ## 🌐 Project Override Hook
 
-This is a **global workflow**. Before executing the steps below, check whether the host project provides an override for it.
+Before executing this workflow, check whether the host project provides an override.
 
-**Where to look** — in the host project's workspace root (NOT in the global workflows repo):
+**Path** (in the host project's workspace root, NOT this global repo):
+`.windsurf/overrides/workflows/<same-filename-as-this-file>.md`
 
-```
-.windsurf/overrides/workflows/<same-filename-as-this-file>.md
-```
+If present, apply its mode (frontmatter `mode:` OR first heading `# REPLACE` / `# EXTEND` / `# MODIFY`):
 
-Use the same filename as this workflow file's basename.
+- **REPLACE** — run ONLY the override; ignore the steps below.
+- **EXTEND** — run the steps below as written, then run the override as a final phase (or at the position it specifies).
+- **MODIFY** — run the steps below, with the steps the override declares substituted / inserted at the matching positions.
 
-**If that override file exists**, read it and apply the first matching mode (declared in frontmatter as `mode: replace|extend|modify`, OR via a first-heading marker `# REPLACE` / `# EXTEND` / `# MODIFY`):
-
-- **REPLACE** — IGNORE the steps below; execute ONLY the override file's instructions. The global workflow is fully shadowed.
-- **EXTEND** — execute the steps below as written, then execute the override as an additional phase (or at the position the override specifies, e.g. "after Step 3").
-- **MODIFY** — execute the steps below, but substitute / insert the steps the override declares (typically by step number or step title).
-
-**If no override file exists**, ignore this section and proceed with the steps below as written.
-
-If the override file's mode is missing or ambiguous, **STOP and ask the user** which mode applies before proceeding.
+No override → proceed as written. Ambiguous mode → **STOP and ask the user**.
 
 ---
 
@@ -41,19 +34,13 @@ If the override file's mode is missing or ambiguous, **STOP and ask the user** w
 >
 > **Violation of this protocol undermines the entire development system.**
 
-Turns the research artifacts in a topic's `research/` folder (plus any
-supplementary external research files produced by Traycer or equivalent tools)
-into the **canonical 5-spec set** in `specs/` and a **ticket inventory** in
-`tickets/`.
+Turns research artifacts in a topic's `research/` folder (plus external research from Traycer or equivalent tools) into the **canonical 5-spec set** in `specs/` and a **ticket inventory** in `tickets/`.
 
-**Input:** research artifacts (raw), partial investigation notes, external
-spec fragments.
+**Input:** research artifacts (raw), partial investigation notes, external spec fragments.
 
 **Output:**
-1. Five (or more) spec files in `docs/{TOPIC_SLUG}/specs/` following the
-   `.windsurf/_templates/*-template.md` formats.
-2. One ticket file per entry in Execution Plan §6 in
-   `docs/{TOPIC_SLUG}/tickets/`, following `ticket-template.md`.
+1. Five (or more) spec files in `docs/{TOPIC_SLUG}/specs/` per `.windsurf/_templates/*-template.md`.
+2. One ticket file per Execution Plan §6 entry in `docs/{TOPIC_SLUG}/tickets/`, per `ticket-template.md`.
 
 ## Inputs
 
@@ -111,123 +98,70 @@ Read:
 
 ### 3. Verify Research Artifacts
 
-For each claim that will appear in a spec, verify it against the actual
-codebase. Per the **spec-author skill**:
+For each claim that will appear in a spec, verify it against the actual codebase. Per the **spec-author skill**:
 
-- **File paths**: run `ls` / `find` to confirm every `file:` ref resolves.
-- **Line counts**: run `wc -l` on every file listed in the planned
-  Implementation Spec §4.
-- **Behaviors**: read the referenced file at the referenced region and
-  confirm the research's description matches.
-- **External / library assumptions**: if research cites a library version /
-  API behavior, verify against `package.json` + the relevant `node_modules`
-  source or official docs.
+- **File paths**: `ls` / `find` to confirm every `file:` ref resolves.
+- **Line counts**: `wc -l` on every file in the planned Implementation Spec §4.
+- **Behaviors**: read the referenced file region and confirm research description matches.
+- **External / library assumptions**: verify against `package.json` + `node_modules` source or official docs.
 
-Produce a short **"Research Verification Notes"** list of any discrepancies
-found. These become either:
-- Corrections baked into the spec set (preferred), or
-- Explicit "Open Questions" for the user to resolve before ticket generation.
+Produce a short **"Research Verification Notes"** of discrepancies found. Each becomes either a correction baked into the spec set (preferred) or an explicit "Open Question" for the user to resolve before ticket generation.
 
 ### 4. Author Epic Brief
 
-Create `docs/{TOPIC_SLUG}/specs/Epic_Brief_—_{Topic Title}.md` using
-`.windsurf/_templates/epic-brief-template.md`.
+Create `docs/{TOPIC_SLUG}/specs/Epic_Brief_—_{Topic Title}.md` using `.windsurf/_templates/epic-brief-template.md`. Follow the template structure.
 
-Keep it short (under ~200 lines). No implementation detail. Includes:
-
-- **What we're building** (1 paragraph)
-- **Context & Problem** (who's affected, current pain)
-- **Scope — IS / IS NOT**
-- **Success Criteria** (user-visible, measurable)
-- **Constraints & Non-Functionals**
-- **Dependencies & Related Work**
-- **External References**
+Critical requirements:
+- Keep it short (under ~200 lines). NO implementation detail.
+- Explicit **Scope — IS / IS NOT** and **Success Criteria** (user-visible, measurable)
+- **Constraints & Non-Functionals**, **Dependencies & Related Work**, **External References**
 
 ### 5. Author Codebase Investigation
 
 Create `docs/{TOPIC_SLUG}/specs/Codebase_Investigation_(Raw_Detailed)_—_{...}.md`.
 
-This is the **evidence file**. Copy / summarize the verified current-state
-facts from Step 3. Raw-detailed structure — tables, file excerpts, data flows
-observed in the code.
-
-No architectural decisions here. Just facts.
+This is the **evidence file** — facts only, no architectural decisions. Copy / summarize verified current-state facts from Step 3 in raw-detailed structure: tables, file excerpts, observed data flows.
 
 ### 6. Author Architecture Spec
 
-Create `docs/{TOPIC_SLUG}/specs/Architecture_Spec_(Summary___Tech_Plan)_—_{...}.md`
-using `.windsurf/_templates/architecture-spec-template.md`.
+Create `docs/{TOPIC_SLUG}/specs/Architecture_Spec_(Summary___Tech_Plan)_—_{...}.md` using `.windsurf/_templates/architecture-spec-template.md`. Follow the template structure.
 
-Required contents:
-
-- **Design Summary** with a Mermaid flowchart
-- **Key Design Decisions** — one subsection per non-obvious decision, with
-  rationale and rejected alternatives
-- **Ownership Model** (table)
-- **Change Propagation** (table)
-- **Data Model** (existing contracts, new contracts)
-- **Component Boundaries** — one subsection per new/refactored component
-- **Integration Points** (existing code + external systems)
-- **Constraints & Edge Cases**
-- **Out-of-Scope** (explicit)
-- **Open Questions** (if any)
-
-Cross-reference Epic Brief and Codebase Investigation at the top.
+Critical requirements:
+- Mermaid flowchart in **Design Summary**
+- One subsection per non-obvious **Key Design Decision** with rationale and rejected alternatives
+- Tables: Ownership Model, Change Propagation, Data Model
+- Explicit **Out-of-Scope** and **Open Questions** sections
+- Cross-reference Epic Brief and Codebase Investigation at the top
 
 ### 7. Author Core Flows
 
-Create `docs/{TOPIC_SLUG}/specs/Core_Flows_—_{...}.md` using
-`.windsurf/_templates/core-flows-template.md`.
+Create `docs/{TOPIC_SLUG}/specs/Core_Flows_—_{...}.md` using `.windsurf/_templates/core-flows-template.md`. Follow the template structure.
 
-For each user-visible flow, include:
-
-- Trigger + preconditions
-- Numbered steps from the user's perspective
-- ASCII/HTML wireframe (desktop; mobile if responsive matters)
-- Mermaid sequence diagram
-- Error/recovery paths
-
-Also include cross-flow concerns: keyboard navigation, a11y, responsive
-breakpoints, loading/empty/error states.
+Critical requirements:
+- Per flow: trigger + preconditions, numbered steps from user's perspective, ASCII/HTML wireframe (desktop; mobile if responsive matters), Mermaid sequence diagram, error/recovery paths
+- Cross-flow concerns: keyboard navigation, a11y, responsive breakpoints, loading/empty/error states
 
 ### 8. Author Implementation Spec
 
-Create `docs/{TOPIC_SLUG}/specs/Implementation_Spec_(Summary)_—_File-Level_Change_Map_for_{...}.md`
-using `.windsurf/_templates/implementation-spec-template.md`.
+Create `docs/{TOPIC_SLUG}/specs/Implementation_Spec_(Summary)_—_File-Level_Change_Map_for_{...}.md` using `.windsurf/_templates/implementation-spec-template.md`. Follow the template structure.
 
-Required contents:
-
-- **Implementation Summary** with a Mermaid flowchart of the work order
-- **Final Ownership Model After Implementation** (table)
-- **File-Level Change Map** — NEW / MODIFIED / REMOVED tables with
-  `file:` refs, measured or estimated line counts, change weight
-- **Workstream Breakdown** — logical groupings of work
-- **Cross-Cutting Concerns** — migration / back-compat, tests, docs
-- **Verification Strategy**
-- **Open Questions Surfaced During Planning**
-
-Every claim must be traceable to the Architecture Spec or Codebase Investigation.
+Critical requirements:
+- Mermaid flowchart of the work order in **Implementation Summary**
+- **File-Level Change Map** — NEW / MODIFIED / REMOVED tables with `file:` refs, measured or estimated line counts, change weight
+- **Workstream Breakdown**, **Cross-Cutting Concerns** (migration / back-compat, tests, docs), **Verification Strategy**, **Open Questions**
+- Every claim must be traceable to the Architecture Spec or Codebase Investigation
 
 ### 9. Author Execution Plan
 
-Create `docs/{TOPIC_SLUG}/specs/Execution_Plan_—_Ticket_Breakdown,_Sizing_&_Dependency_Map.md`
-using `.windsurf/_templates/execution-plan-template.md`.
+Create `docs/{TOPIC_SLUG}/specs/Execution_Plan_—_Ticket_Breakdown,_Sizing_&_Dependency_Map.md` using `.windsurf/_templates/execution-plan-template.md`. Follow the template structure.
 
-Required contents:
-
-- **Purpose** (1–2 paragraphs)
-- **File Inventory — Measured Line Counts** (tables of new / modified /
-  deleted files; line counts must be measured with `wc -l`)
-- **Ticket Dependency Map** (Mermaid graph)
-- **Parallelization Strategy** (table)
-- **Sizing Summary** (table, every ticket under ~500 lines changed or
-  justified exception)
+Critical requirements:
+- **File Inventory** with line counts measured via `wc -l` (not estimated)
+- **Ticket Dependency Map** (Mermaid graph) and **Parallelization Strategy** (table)
+- **Sizing Summary** — every ticket under ~500 lines changed OR justified exception
 - **Ticket Inventory** (table — direct input to Step 10)
-- **Per-Ticket Scope Contracts** — for each ticket: in/out of scope, key
-  files, acceptance-criteria seeds, verification seeds
-- **Phase Structure** (if topic is large enough to warrant phases)
-- **Consumer / Migration Map** (if applicable)
-- **Risks & Open Questions**
+- **Per-Ticket Scope Contracts** — in/out of scope, key files, acceptance-criteria seeds, verification seeds, per ticket
+- **Phase Structure** (if applicable), **Consumer / Migration Map** (if applicable), **Risks & Open Questions**
 
 ### 10. Verify Spec Set
 
@@ -248,60 +182,30 @@ If any gate fails, fix before proceeding to Step 11.
 
 ### 11. Present Spec Set to User for Confirmation
 
-Stop and report to the user:
-
-```
-✅ Spec set authored for topic: {TOPIC_SLUG}
-
-📄 Specs created:
-- specs/Epic_Brief_—_{...}.md
-- specs/Codebase_Investigation_(Raw_Detailed)_—_{...}.md
-- specs/Architecture_Spec_(Summary___Tech_Plan)_—_{...}.md
-- specs/Core_Flows_—_{...}.md
-- specs/Implementation_Spec_(Summary)_—_File-Level_Change_Map_for_{...}.md
-- specs/Execution_Plan_—_Ticket_Breakdown,_Sizing_&_Dependency_Map.md
-
-🎫 Ticket inventory ({N} tickets):
-- {TICKET_ID_1}: {title}  [risk 🟢/🟡/🔴] [~{N} lines]
-- {TICKET_ID_2}: {title}  [risk 🟢/🟡/🔴] [~{N} lines]
-  ...
-
-🔗 Dependencies:
-{tree or summary of the dependency graph}
-
-❓ Open questions surfaced during spec authoring:
-- {question 1}
-- {question 2}
-
-Proceed to ticket generation? (yes / yes with edits / no — pause for review)
-```
+Stop and report to the user with:
+- ✅ topic slug + paths of all 5 spec files created
+- 🎫 ticket inventory — each ticket's `{TICKET_ID}: {title}` with risk 🟢/🟡/🔴 and approximate line count
+- 🔗 dependency tree or summary from the Execution Plan
+- ❓ open questions surfaced during spec authoring
+- Closing prompt: `Proceed to ticket generation? (yes / yes with edits / no — pause for review)`
 
 **WAIT for user decision before Step 12.**
 
-If the user requests edits (e.g. "split T-A into T-A + T-A2"), apply them in
-the Execution Plan and re-run Step 10 before looping back to this step.
+If the user requests edits (e.g. "split T-A into T-A + T-A2"), apply them in the Execution Plan and re-run Step 10 before looping back to this step.
 
 ### 12. Generate Ticket Files
 
 For each entry in Execution Plan §6:
 
-1. Create `docs/{TOPIC_SLUG}/tickets/{TICKET_ID}__{short_slug}.md` using
-   `.windsurf/_templates/ticket-template.md`.
-2. Fill in:
-   - **Scope & Objective** — from Execution Plan §7 scope contract + Epic Brief scope
-   - **References** — link to all 5 upstream specs + dependencies from §3
-   - **Detailed Steps** — derived from Implementation Spec §4 rows assigned
-     to this ticket + Architecture Spec decisions that apply
-   - **Guardrails** — from Execution Plan §10 risks + any cross-cutting
-     concerns flagged for this ticket
-   - **Acceptance Criteria** — from §7 acceptance seeds, expanded to the
-     detail level required by the **ticket template** (binary-verifiable
-     assertions)
-   - **Verification Steps** — from §7 verification seeds, expanded to
-     concrete copy-pastable commands
+1. Create `docs/{TOPIC_SLUG}/tickets/{TICKET_ID}__{short_slug}.md` using `.windsurf/_templates/ticket-template.md`.
+2. Source ticket content from the upstream specs:
+   - **Scope & Objective**: Execution Plan §7 scope contract + Epic Brief scope
+   - **References**: links to all 5 upstream specs + §3 dependencies
+   - **Detailed Steps**: Implementation Spec §4 rows assigned to this ticket + applicable Architecture Spec decisions
+   - **Guardrails**: Execution Plan §10 risks + cross-cutting concerns flagged for this ticket
+   - **Acceptance Criteria + Verification**: §7 seeds, expanded to binary-verifiable assertions and copy-pastable commands per the ticket template
 
-Follow the ticket template's **Detailed Steps** rule strictly: every step
-must name the file, state the exact change, and give a rationale.
+Follow the ticket template's **Detailed Steps** rule strictly: every step names the file, exact change, and rationale.
 
 ### 13. Update Topic README
 
@@ -344,11 +248,7 @@ root WORK_LOG to reflect the spec-authoring + ticket-generation session.
 
 ## Notes
 
-- Designed to run AFTER initial research is complete (either via
-  `/topic-research` or external tools like Traycer).
-- Does NOT implement code — it only produces specs + tickets. Implementation
-  happens via `/topic-implement` per ticket.
+- Runs AFTER initial research (via `/topic-research` or external tools like Traycer).
+- Does NOT implement code — it only produces specs + tickets. Implementation happens via `/topic-implement` per ticket.
 - Always uses `@spec-author` skill mindset throughout.
-- If the topic is trivial (1 ticket, <200 lines), the Execution Plan may be
-  degenerate (1-row inventory) but the 5 canonical specs should still exist —
-  each serves a distinct audience.
+- For trivial topics (1 ticket, <200 lines), the Execution Plan may be degenerate (1-row inventory) but all 5 canonical specs should still exist — each serves a distinct audience.

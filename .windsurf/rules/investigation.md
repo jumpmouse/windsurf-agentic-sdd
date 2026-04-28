@@ -5,23 +5,18 @@ trigger: always_on
 
 ## 🌐 Project Override Hook
 
-This is a **global rule**. Once per session (or whenever this rule's content is loaded into context), check whether the host project provides an override.
+Once per session (or whenever this rule's content is loaded into context), check whether the host project provides an override.
 
-**Where to look** — in the host project's workspace root (NOT in the global rules repo):
+**Path** (in the host project's workspace root, NOT this global repo):
+`.windsurf/overrides/rules/<same-filename-as-this-file>.md`
 
-```
-.windsurf/overrides/rules/<same-filename-as-this-file>.md
-```
+If present, apply its mode (frontmatter `mode:` OR first heading `# REPLACE` / `# EXTEND` / `# MODIFY`):
 
-Use the same filename as this rule file's basename.
+- **REPLACE** — follow ONLY the override.
+- **EXTEND** — follow this rule AND the override.
+- **MODIFY** — follow this rule with the bullets / sections the override substitutes / refines.
 
-**If that override file exists**, read it and apply the first matching mode (declared in frontmatter as `mode: replace|extend|modify`, OR via a first-heading marker `# REPLACE` / `# EXTEND` / `# MODIFY`):
-
-- **REPLACE** — IGNORE the rule below; follow ONLY the override.
-- **EXTEND** — follow the rule below AND additionally follow the override's directives.
-- **MODIFY** — follow the rule below, but with the specific bullets / sections the override substitutes or refines.
-
-**If no override file exists**, follow the rule below as written. If the override's mode is missing or ambiguous, follow the global rule as-is and surface the ambiguity to the user when convenient.
+No override → follow as written. Ambiguous mode → follow the global rule and surface the ambiguity to the user.
 
 ---
 

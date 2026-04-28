@@ -6,25 +6,18 @@ description: Close a ticket — final review, multi-commit (code first, docs las
 
 ## 🌐 Project Override Hook
 
-This is a **global workflow**. Before executing the steps below, check whether the host project provides an override for it.
+Before executing this workflow, check whether the host project provides an override.
 
-**Where to look** — in the host project's workspace root (NOT in the global workflows repo):
+**Path** (in the host project's workspace root, NOT this global repo):
+`.windsurf/overrides/workflows/<same-filename-as-this-file>.md`
 
-```
-.windsurf/overrides/workflows/<same-filename-as-this-file>.md
-```
+If present, apply its mode (frontmatter `mode:` OR first heading `# REPLACE` / `# EXTEND` / `# MODIFY`):
 
-Use the same filename as this workflow file's basename.
+- **REPLACE** — run ONLY the override; ignore the steps below.
+- **EXTEND** — run the steps below as written, then run the override as a final phase (or at the position it specifies).
+- **MODIFY** — run the steps below, with the steps the override declares substituted / inserted at the matching positions.
 
-**If that override file exists**, read it and apply the first matching mode (declared in frontmatter as `mode: replace|extend|modify`, OR via a first-heading marker `# REPLACE` / `# EXTEND` / `# MODIFY`):
-
-- **REPLACE** — IGNORE the steps below; execute ONLY the override file's instructions. The global workflow is fully shadowed.
-- **EXTEND** — execute the steps below as written, then execute the override as an additional phase (or at the position the override specifies, e.g. "after Step 3").
-- **MODIFY** — execute the steps below, but substitute / insert the steps the override declares (typically by step number or step title).
-
-**If no override file exists**, ignore this section and proceed with the steps below as written.
-
-If the override file's mode is missing or ambiguous, **STOP and ask the user** which mode applies before proceeding.
+No override → proceed as written. Ambiguous mode → **STOP and ask the user**.
 
 ---
 
