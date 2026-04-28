@@ -34,6 +34,12 @@ No override → proceed as written. Ambiguous mode → **STOP and ask the user**
 >
 > **Violation of this protocol undermines the entire development system.**
 
+Universal entry point for the Cascade-native workflow. Handles two modes:
+1. **New work** — user provides a PROBLEM → gathers context → asks user should we use: a. new topic (execute /topic-new before next steps), b. existing topic, c. no topic. → execute `/topic-research`
+2. **Resume** — no PROBLEM provided → gathers context → automatically continues from where we left off (if user didn't provide TOPIC_SLUG, identify it from docs/CHANGELOG.md. if all done, return to user, ask what to do next).  → if applicable, execute appropriate 'topic-*' workflow, based on topics and tickets state. also, in docs/CHANGELOG.md.
+
+**Philosophy: Depth over speed.** Check 3 times rather than skip once. Be methodical, not fast.
+
 ## Inputs
 
 - **TOPIC_SLUG** : Folder name in docs, e.g. `app-update-v21`. if not provided, auto-detect from docs/CHANGELOG.md.
@@ -57,12 +63,39 @@ docs/{TOPIC_SLUG}/
 
 ## Lifecycle
 
+### Variant 1: with PROBLEM provided - new topic (end-to-end flow)
 ```
 /kickoff (this workflow — context + route)
-  → /topic-research (@deep-investigator)   ← complex tickets only, user reviews
-  → /topic-implement (@spec-implementer)   ← execute ticket spec
-  → /topic-verify (@verification-fixer)    ← verify against acceptance criteria
+  → /topic-new                                  ← create docs/{slug}/ folder structure
+  → /topic-research (@deep-investigator)        ← interactive investigation; user reviews findings
+  → /topic-specs-from-research (@spec-author)   ← author 5-spec set + tickets
+       ↳ Step 3 — research verification (integrated)
+       ↳ Step 10 — spec-set quality gate (integrated)
+       ↳ Step 11 — user review + approval gate (integrated)
+       ↳ Step 12 — generate per-ticket files
+  → /topic-tickets-verify (@verification-fixer) ← verify tickets ↔ Execution Plan + spec set
+  → /topic-implement (@spec-implementer)        ← execute ticket spec
+  → /topic-verify (@verification-fixer)         ← verify implementation against acceptance criteria
+  → /topic-close (@code-reviewer)               ← report, changelog, readme, commit
+```
+
+**Note on external research (Traycer or equivalent):** if research is produced
+outside Cascade, `/topic-research` is skipped and the chain enters at
+`/topic-specs-from-research` with the external research linked via
+`RESEARCH_REFS`. The rest of the chain is identical.
+
+### Variant 2: Continued work - active topic exists OR user provided TOPIC_SLUG
+```
+/kickoff (this workflow — context + route)
+  → /topic-verify (@verification-fixer)    ← verify active ticket against specs and actual code
+  → /topic-implement (@spec-implementer)   ← execute ticket spec, when approved
+  → /topic-verify (@verification-fixer)    ← verify implementation against ticket, requirements and acceptance criteria
   → /topic-close (@code-reviewer)          ← report, changelog, readme, commit
+```
+
+### none of the above - no active topics, no inputs
+```
+report what was last done and ask user what to do next. You will write that down as random cartoon caracter, like bugs bunny, daffy duck, etc. use icon symbols, in random style.
 ```
 
 Important note: **the ticket spec IS the plan**. No separate planning phase.
