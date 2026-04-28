@@ -68,121 +68,133 @@ Each step MUST have:
 - **exact change** (code block or explicit transformation rule with inputs/outputs)
 - **rationale** (why this change, tying back to the Scope & Objective)
 
-### 1. {Short verb-first step title — e.g. "Install dependency"}
+### 1. {Short verb-first step title, e.g. "Install Bootstrap 5 package"}
 
 **Files touched:**
 
-- `file:{dependency-manifest}` (e.g. `package.json`, `pyproject.toml`, `Cargo.toml`)
-- `file:{lockfile}`
+- `file:package.json`
+- `file:package-lock.json`
 
 **Change:**
 
 ```
-{exact dependency-manager command, e.g. `npm install <pkg>@<version>`,
-`pip install <pkg>==<version>`, etc.}
+npm install bootstrap@^5.2.3 @popperjs/core@^2.11.6
 ```
 
-**Rationale:** {one sentence — why this version, why now}
+**Rationale:** {one sentence}
 
 ---
 
-### 2. {Short verb-first step title — e.g. "Swap a config-file entry"}
+### 2. {Short verb-first step title, e.g. "Swap the build-time CSS entry to Bootstrap 5"}
 
 **Files touched:**
 
-- `file:{config-file-path}`
+- `file:angular.json`
 
-**Before** ({path/key inside the file}):
+**Before** (`projects.Mining.architect.build.options.styles`):
 
-```{language}
-{exact existing snippet}
+```json
+"styles": [
+  "src/assets/website/css/bootstrap.min.css",
+  ...
+]
 ```
 
 **After:**
 
-```{language}
-{exact target snippet}
+```json
+"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  ...
+]
 ```
 
-**Rationale:** {one sentence — why the new value; if a legacy resource is
-left on disk on purpose, name the cleanup ticket: {CLEANUP_TICKET_ID}}
+**Rationale:** Switch from the vendored Bootstrap 4 build to the fresh npm-installed
+Bootstrap 5 build. The legacy asset file stays on disk until {CLEANUP_TICKET_ID} to
+keep the diff surgical.
 
 ---
 
-### 3. {Repo-wide search/replace step with hotspot references}
+### 3. {Template for a repo-wide search/replace step with hotspot references}
 
-**Files touched:** repo-wide `*.{ext1}` + `*.{ext2}` (sweep-driven, not
-count-driven).
+**Files touched:** repo-wide `*.html` + `*.scss` (sweep-driven, not count-driven).
 
-**Known hotspot files** (NOT exhaustive — execute a repo-wide sweep):
+**Known hotspot files** (NOT an exhaustive list — execute a repo-wide sweep):
 
 | File | Approx. occurrences |
 |------|--------------------:|
-| `file:{path/to/hotspot1}` | ~{N} |
-| `file:{path/to/hotspot2}` | ~{N} |
+| `file:src/.../foo.component.html` | ~12 |
+| `file:src/.../bar.component.scss` | ~3 |
 
 **Transformation rules** (apply in order; each must be idempotent):
 
 | From | To | Notes |
 |------|----|-------|
-| `{regex_from}` | `{replacement}` | {what / why} |
-| `{regex_from}` | `{replacement}` | {what / why} |
+| `(?<![-\w])ml-([0-5]|auto)(?![-\w])` | `ms-$1` | directional margin |
+| `(?<![-\w])mr-([0-5]|auto)(?![-\w])` | `me-$1` | directional margin |
+| `(?<![-\w])ml-(sm\|md\|lg\|xl)-([0-5]|auto)(?![-\w])` | `ms-$1-$2` | responsive variant |
 
 **Sweep locations that are easy to miss — MUST be included:**
 
-- {comment blocks, e.g. `<!-- ... -->` or `/* ... */`}
-- {framework-specific bindings, e.g. `[class]="..."`}
-- {string literals in code files}
-- {duplicated template blocks (e.g. modal open/close variants)}
+- HTML comment blocks (`<!-- ... -->`)
+- Angular class bindings: `[className]="..."`, `[ngClass]="{ 'foo': cond }"`
+- String literals in `.ts` files
+- Duplicated template blocks (e.g., modal open/close variants)
 
 **Do NOT touch these false-positive look-alikes:**
 
-- {project-owned identifiers that look like the regex but are intentional}
+- `.ml-14`, `.mr-275`, `.pl-10`, `.pr-10`, `.pl-mobile-code`, `.pr-mobile-code`
+- `.text-right-768`, `.close-button`, `.soma-pl-40`
 
-**Rationale:** {why this sweep is correct; why the false positives are
-project-owned}
+**Rationale:** Bootstrap 5 drops LTR-assuming directional utilities in favor of
+logical-property utilities. The project-owned classes above are custom and must
+remain.
 
 ---
 
-### 4. {Shim step — when direct migration would enlarge blast radius}
+### 4. {Template for a shim step — when direct migration would enlarge blast radius}
 
 **Files touched:**
 
-- `file:{global-shim-file}`
-- `file:docs/{TOPIC_SLUG}/{shim-inventory}.md` (inventory entry)
+- `file:src/styles.scss` (global shim)
+- `file:docs/{topic-slug}/bootstrap-shim.md` (inventory entry)
 - {list of consumer files that will rely on the shim}
 
-**Shim rule (add to {global-styles | global-init}):**
+**Shim rule (add to global styles):**
 
-```{language}
+```scss
 // =====================================================================
-// {SHIM-MARKER-TOKEN} — Temporary compatibility shim ({TICKET_ID})
+// BOOTSTRAP5-COMPAT — Temporary compatibility shim ({TICKET_ID})
 //
 // {1-paragraph rationale: why shim instead of direct migration}
 //
-// Inventory: docs/{TOPIC_SLUG}/{shim-inventory}.md
+// Inventory: docs/{topic-slug}/bootstrap-shim.md
 // Cleanup contract: {CLEANUP_TICKET_ID}
 // =====================================================================
-{shim definition}
-// END {SHIM-MARKER-TOKEN}
+.legacy-bs4-class {
+  {BS4 default behavior re-declared here}
+}
+// END BOOTSTRAP5-COMPAT
 ```
 
-**Inventory entry to append to `{shim-inventory}.md`:**
+**Inventory entry to append to `bootstrap-shim.md`:**
 
 ```markdown
-### SHIM-NN — {short identifier}
+### SHIM-NN — `.legacy-bs4-class` description
 
-- **File:** `{file path}` (search `{SHIM-MARKER-TOKEN}`)
-- **Affected selector / API / markup:** {what}
-- **Affected consumers:** {list files + occurrence counts}
+- **File:** `src/styles.scss` (global shim, search `BOOTSTRAP5-COMPAT`)
+- **Affected selector / markup:** `.legacy-bs4-class`
+- **Affected templates:** {list files + occurrence counts}
 - **Why the shim exists:** {1–3 sentences}
 - **Behavior preserved:** {what default is restored}
 - **Cleanup action:** {exact steps for {CLEANUP_TICKET_ID}}
 - **Status:** open
 ```
 
-**Rationale:** {1 sentence on why direct migration would be too big; the
-explicit marker + inventory makes the technical debt visible and reviewable.}
+**Rationale:** The direct semantic migration of `.legacy-bs4-class` would touch
+{N} files and risk breaking {area}. Tracking as an explicit shim with a named
+cleanup ticket keeps the blast radius in this ticket small while making the
+technical debt visible and reviewable.
 
 ---
 
@@ -211,15 +223,15 @@ verifiable.
 A numbered list of conditions that MUST be true when the ticket is done. Each
 must be independently verifiable by a grep, a build, or a test.
 
-1. {Binary true/false check — e.g. "Repo-wide sweep: zero occurrences of
-   {pattern} remain outside the approved exception list (verified via
-   {tool/regex with word-boundary anchors})."}
-2. {Binary check — e.g. "{config-file} `{key}` points to `{expected-value}`."}
-3. {Binary check — e.g. "Every `{SHIM-MARKER-TOKEN}` in source has a matching
-   `### SHIM-NN` entry in `{shim-inventory}.md`."}
-4. {Build check — e.g. "`{BUILD_COMMAND}` exits 0."}
-5. {Test check — e.g. "`{TEST_COMMAND}` passes at baseline ({N} passed,
-   {M} skipped)."}
+1. {Check phrased as a binary true/false, e.g. "Repo-wide sweep: zero BS4
+   directional utilities remain outside approved custom-class list (verified
+   via perl-regex with word boundaries on both sides)."}
+2. {Check, e.g. "`angular.json` styles entry points to
+   `node_modules/bootstrap/dist/css/bootstrap.min.css`."}
+3. {Check, e.g. "Every `BOOTSTRAP5-COMPAT` marker in source has a matching
+   `### SHIM-NN` entry in `bootstrap-shim.md`."}
+4. {Check, e.g. "`ng build --configuration prod` exits 0."}
+5. {Check, e.g. "`ng test` passes at baseline ({N} passed, {M} skipped)."}
 
 ---
 
@@ -230,28 +242,27 @@ copy-pastable.
 
 1. **Build verification**
    ```bash
-   {BUILD_COMMAND}
+   npx ng build --configuration prod
    ```
    **Expected:** exit 0, no compilation errors, only pre-existing warnings.
 
 2. **Test verification**
    ```bash
-   {TEST_COMMAND}
+   npx ng test --watch=false --browsers=ChromeHeadlessCustom
    ```
-   **Expected:** `{baseline pass/fail/skip count}`.
+   **Expected:** `TOTAL: {N} SUCCESS, {M} skipped` (baseline match).
 
 3. **Residue sweep — {category 1}**
    ```bash
-   {project-appropriate sweep command, e.g.:
-    find {src-root} \( -name '*.{ext1}' -o -name '*.{ext2}' \) \
-      -exec {grep|perl|rg} '{regex}' {} \;}
+   find src \( -name '*.html' -o -name '*.scss' \) -exec perl -nlE \
+     'while (/(?<![-\w]){BS4_PATTERN}(?![-\w])/g) { say "$ARGV:$.: $&"; }' {} \;
    ```
    **Expected:** zero lines.
 
-4. **Inventory integrity** (only if the ticket introduces shims)
+4. **Inventory integrity**
    ```bash
-   diff <({find-tool} '{SHIM-MARKER-TOKEN}' {src-root} | sort -u) \
-        <(grep -nE '^### SHIM-' docs/{TOPIC_SLUG}/{shim-inventory}.md)
+   diff <(grep -rln 'BOOTSTRAP5-COMPAT' src | sort -u) \
+        <(grep -nE '^### SHIM-' docs/{topic-slug}/bootstrap-shim.md)
    ```
    **Expected:** 1:1 mapping between source markers and inventory entries.
 
@@ -264,15 +275,3 @@ copy-pastable.
 
 {Optional: open questions, carry-over technical debt, risks that should be made
 visible to the next ticket. Keep concise.}
-
----
-
-## Filled Example (for reference)
-
-A fully-filled real-world ticket (Bootstrap 4→5 migration in an Angular project)
-is preserved at:
-
-- `.windsurf/_templates/examples/ticket__sxe-bootstrap-migration.md`
-
-Use it as a sanity check for what each placeholder slot resolves to in practice.
-Do NOT copy its tech-stack-specific content into your own ticket.

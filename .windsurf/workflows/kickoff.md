@@ -36,14 +36,15 @@ No override → proceed as written. Ambiguous mode → **STOP and ask the user**
 
 Universal entry point for the Cascade-native workflow. Handles two modes:
 1. **New work** — user provides a PROBLEM → gathers context → asks user should we use: a. new topic (execute /topic-new before next steps), b. existing topic, c. no topic. → execute `/topic-research`
-2. **Resume** — no PROBLEM provided → gathers context → automatically continues from where we left off (if user didn't provide TOPIC_SLUG, identify it from docs/CHANGELOG.md. if all done, return to user, ask what to do next).  → if applicable, execute appropriate 'topic-*' workflow, based on topics and tickets state. also, in docs/CHANGELOG.md.
+2. **Resume** — no PROBLEM provided → gathers context → automatically continues from where we left off (if user didn't provide TOPIC_SLUG, identify it from `docs/WORK_LOG.md` — the root session-based log. If all done, return to user, ask what to do next.) → if applicable, execute appropriate `/topic-*` workflow, based on topics and tickets state.
 
 **Philosophy: Depth over speed.** Check 3 times rather than skip once. Be methodical, not fast.
 
 ## Inputs
 
-- **TOPIC_SLUG** : Folder name in docs, e.g. `app-update-v21`. if not provided, auto-detect from docs/CHANGELOG.md.
-- **TICKET_ID** (OPTIONAL): e.g. `T-04`. If not provided, auto-detect from topic CHANGELOG.md.
+- **TOPIC_SLUG** (optional): Folder name in `docs/`, e.g. `feature-name` / `accessibility-audit`. If not provided, auto-detect from the most recent topic in `docs/WORK_LOG.md`.
+- **TICKET_ID** (optional): e.g. `T-04`. If not provided, auto-detect the next uncompleted ticket from the topic's `README.md` status table.
+- **PROBLEM** (optional): a free-form problem statement. If provided, this triggers Variant 1 (new-topic flow).
 
 ## Project Overview
 
@@ -87,10 +88,10 @@ outside Cascade, `/topic-research` is skipped and the chain enters at
 ### Variant 2: Continued work - active topic exists OR user provided TOPIC_SLUG
 ```
 /kickoff (this workflow — context + route)
-  → /topic-verify (@verification-fixer)    ← verify active ticket against specs and actual code
-  → /topic-implement (@spec-implementer)   ← execute ticket spec, when approved
-  → /topic-verify (@verification-fixer)    ← verify implementation against ticket, requirements and acceptance criteria
-  → /topic-close (@code-reviewer)          ← report, changelog, readme, commit
+  → /topic-tickets-verify (@verification-fixer) ← verify active ticket spec against specs + actual code (BEFORE implementation)
+  → /topic-implement (@spec-implementer)        ← execute ticket spec, when approved
+  → /topic-verify (@verification-fixer)         ← verify implementation against ticket + acceptance criteria
+  → /topic-close (@code-reviewer)               ← report, changelog, readme, commit
 ```
 
 ### none of the above - no active topics, no inputs
@@ -121,15 +122,15 @@ Then proceed to Step 1.
 If TOPIC_SLUG was provided, use it and skip to Step 2.
 
 If not, auto-detect:
-- Read `docs/CHANGELOG.md` — find the **last entry** (most recent date, last topic heading)
-- The topic heading format is `### [{TOPIC_TITLE}]({TOPIC_SLUG}/) — ...`
-- Extract the TOPIC_SLUG from that link
-- If `docs/CHANGELOG.md` doesn't exist or is empty, list subdirectories of `docs/` and pick the one with the most recent `CHANGELOG.md` modification
+- Read `docs/WORK_LOG.md` — find the **most recent topic section** (top of the file, newest first)
+- The topic heading format is `# ({YYYY-MM-DD} ...) {TOPIC_TITLE} ({TOPIC_SLUG}) — ...`
+- Extract the TOPIC_SLUG from that heading
+- If `docs/WORK_LOG.md` doesn't exist or is empty, list subdirectories of `docs/` and pick the one with the most recent `CHANGELOG.md` modification (per-topic CHANGELOG)
 - If still ambiguous, ASK the user
 
 Report:
 ```
-📂 Topic detected: {TOPIC_SLUG} (from root CHANGELOG last entry)
+📂 Topic detected: {TOPIC_SLUG} (from root WORK_LOG most recent entry)
 ```
 
 ### 2. Gather Topic Context

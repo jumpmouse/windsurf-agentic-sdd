@@ -43,8 +43,8 @@
 
 | Check | Result |
 |-------|--------|
-| `{BUILD_COMMAND}` | ✅ / ❌ |
-| `{TEST_COMMAND}` | ✅ {X} passed, {Y} skipped |
+| `ng build` | ✅ / ❌ |
+| `ng test` | ✅ {X} passed, {Y} skipped |
 | {Other checks} | ✅ / ❌ |
 
 ---

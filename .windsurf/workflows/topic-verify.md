@@ -92,10 +92,13 @@ Keep a per-guardrail check list with evidence — feeds §8.
 - Check that no unrelated functionality would break
 - Verify build and tests pass clean:
 
+Run the project's build and test commands (defined by the host project —
+typically captured as `{BUILD_COMMAND}` and `{TEST_COMMAND}` in
+`docs/LOCAL_SETUP.md` or in a project-local override of this workflow):
+
 ```bash
-# In /Users/milosbr/projects/shakticoin/sxe-user-frontend
-npx ng build --configuration prod
-npx ng test --watch=false --browsers=ChromeHeadlessCustom
+{BUILD_COMMAND}
+{TEST_COMMAND}
 ```
 
 Record exit codes, total pass/fail/skipped, and hash/time — feeds §8.
@@ -130,11 +133,11 @@ re-check — feeds §8.
 - [ ] All acceptance criteria met
 - [ ] All guardrails respected
 - [ ] No regressions in related areas
-- [ ] `ng build` passes clean (exit 0)
-- [ ] `ng test` passes at baseline
+- [ ] `{BUILD_COMMAND}` passes clean (exit 0)
+- [ ] `{TEST_COMMAND}` passes at baseline
 - [ ] All 🔴 Critical issues resolved
 - [ ] All 🟡 Major issues resolved or deferred with follow-up ticket ref
-- [ ] Inline markers (if any, e.g. `BOOTSTRAP5-COMPAT`) map 1:1 to inventory
+- [ ] Inline shim markers (if any) map 1:1 to their inventory file
 
 ### 8. Write Verification Report
 

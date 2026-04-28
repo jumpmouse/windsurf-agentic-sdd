@@ -109,20 +109,30 @@ Each topic is a self-contained work area with its own tickets, reports, and chan
 _Create new topics with `/topic-new`._
 ```
 
-Register all existing topic folders (e.g., `app-update-v21/`) in the Topics table.
+Register all existing topic folders (e.g., `feature-name/`, `accessibility-audit/`) in the Topics table.
 
-### 3. Create Root CHANGELOG.md
+### 3. Create Root WORK_LOG.md
 
-If `docs/CHANGELOG.md` does not exist, create it using the template from `.windsurf/_templates/changelog-template.md`:
+If `docs/WORK_LOG.md` does not exist, create it as the **single session-based
+log** at the repo root. There is no separate root CHANGELOG — each topic
+keeps its own `docs/{TOPIC_SLUG}/CHANGELOG.md`, and the root `WORK_LOG.md`
+captures both "what was done" and "when it was done" with full references to
+topic, ticket, commits, and reports.
+
+Use `.windsurf/_templates/work-log-entry-template.md` as the structural
+reference. Initial scaffold:
 
 ```markdown
-# Changelog — {PROJECT_NAME}
+# WORK_LOG — {PROJECT_NAME}
 
-All notable changes for this project are documented here.
-Each entry references the ticket spec, completion report, and git commit(s).
-Entries are mirrored from topic changelogs, with a topic reference added.
+Session-based root log. Newest entries on top. Each topic gets a
+top-level section; sessions go under each topic's `## Sessions` subheading.
+
+See `.windsurf/_templates/work-log-entry-template.md` for the entry format.
 
 ---
+
+_Topic sections will be added by `/topic-new` as topics are created._
 ```
 
 If it already exists, leave it as-is.
@@ -130,10 +140,12 @@ If it already exists, leave it as-is.
 ### 4. Generate Local Setup
 
 Execute `/_generate-local-setup` workflow to create `docs/LOCAL_SETUP.md`:
-- Prerequisites (Node.js, npm, Angular CLI)
+- Prerequisites (runtime + package manager + project-specific CLIs detected
+  from the codebase)
 - Environment variables
-- Build & run commands
-- Test commands
+- Build & run commands (capture as `{BUILD_COMMAND}` so other workflows can
+  reference)
+- Test commands (capture as `{TEST_COMMAND}`)
 - Ports & URLs
 - Troubleshooting
 
@@ -209,7 +221,7 @@ Write `docs/research/initial-project-review.md`:
 
 📁 Documentation Created/Updated:
 - docs/README.md — project hub
-- docs/CHANGELOG.md — root changelog
+- docs/WORK_LOG.md — root session-based log
 - docs/LOCAL_SETUP.md — development setup
 - docs/research/initial-project-review.md — code review
 

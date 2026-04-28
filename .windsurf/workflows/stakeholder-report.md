@@ -138,8 +138,8 @@ docs/{TOPIC_SLUG}/stakeholder-reports/{YYYY-MM-DD}__{short_audience_slug}.md
 
 Examples:
 
-- `docs/app-update-v21/stakeholder-reports/2026-04-28__non-technical-partners.md`
-- `docs/app-update-v21/stakeholder-reports/2026-04-28__investors.md`
+- `docs/{TOPIC_SLUG}/stakeholder-reports/{YYYY-MM-DD}__non-technical-partners.md`
+- `docs/{TOPIC_SLUG}/stakeholder-reports/{YYYY-MM-DD}__investors.md`
 
 If `stakeholder-reports/` doesn't exist yet, create it.
 

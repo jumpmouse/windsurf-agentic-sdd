@@ -12,12 +12,11 @@
 
 > _One short paragraph in everyday language. Read this and you know the gist._
 >
-> {Example: "We're upgrading the engine of the website while it's still
-> running, like changing the tires on a car going down the highway. This
-> month we finished a big chunk: we swapped the old paint and trim (Bootstrap 4)
-> for new paint and trim (Bootstrap 5) without anyone noticing. Everything
-> still looks and works the same — that's the goal. Up next: replacing the
-> dashboard wires (jQuery) with modern ones."_
+> {Example: "We're {high-level analogy for the work — e.g. 'upgrading the
+> engine of the website while it's still running, like changing the tires on
+> a car going down the highway'}. This {period} we finished {what}. Everything
+> still {what users care about} — that's the goal. Up next: {next step in
+> plain language}."_
 
 ---
 
@@ -27,10 +26,10 @@
 > _If you must use a technical term, put it in **bold** and define it in the
 > Glossary at the bottom._
 
-- {Plain-English bullet 1 — e.g. "Updated the website's underlying styling library to a newer version. Think of it like upgrading from Windows 10 to Windows 11 — same look, but the modern foundation needed for everything that comes next."}
-- {Plain-English bullet 2 — e.g. "Tested every page to make sure nothing visually changed for users."}
-- {Plain-English bullet 3 — e.g. "Set up a tiny automated checker that catches a specific kind of mistake before it ever reaches users."}
-- {Plain-English bullet 4 — e.g. "Wrote down clear instructions so future updates can follow the same careful process."}
+- {Plain-English bullet 1 — use a relatable analogy if the underlying work is technical}
+- {Plain-English bullet 2 — focus on outcome / impact, not mechanism}
+- {Plain-English bullet 3 — highlight any safety net you put in place (test, automation, documentation)}
+- {Plain-English bullet 4 — mention groundwork that unblocks future work}
 
 ---
 
@@ -39,9 +38,9 @@
 > _Translate the work into "why should the reader care". This is the most
 > important section for non-technical audiences._
 
-- **For users of the website:** {What they will / won't notice. e.g. "Nothing visible changes — that's the win. The site looks and behaves exactly as before, but underneath it's running on more modern parts."}
-- **For the business:** {Plain language. e.g. "We're now ready to take the next steps in the long upgrade plan. Each step gets a little easier from here."}
-- **For other team members:** {e.g. "The codebase is cleaner, with fewer outdated bits. Future bug fixes will be faster."}
+- **For users of the {product}:** {what they will / won't notice}
+- **For the business:** {plain-language outcome — risk reduced, capability unlocked, next step enabled}
+- **For other team members:** {plain-language internal benefit — cleaner code, faster fixes, better docs}
 
 ---
 
@@ -53,21 +52,22 @@
 **Overall progress:** `▰▰▱▱▱▱▱` **2 of 7 phases complete** _(roughly 28%)_
 
 ```mermaid
-%% Sample: replace with the actual phase list for your topic
+%% Replace with the actual phase list for your topic. Keep it simple —
+%% partners often read this on phones.
 gantt
     title Project journey — start to finish
     dateFormat  YYYY-MM-DD
     axisFormat  %b
     section Done
-    Cleanup of old tools    :done,    p0, 2026-04-01, 2026-04-15
-    Big foundation upgrade  :done,    p1, 2026-04-16, 2026-04-28
+    {Phase 0 — plain-English title}    :done,    p0, {start}, {end}
+    {Phase 1 — plain-English title}    :done,    p1, {start}, {end}
     section Next
-    Replace dashboard wires :         p2, 2026-04-29, 2026-05-15
+    {Phase 2 — plain-English title}    :         p2, {start}, {end}
     section Later
-    Phase 3                 :         p3, 2026-05-16, 2026-06-01
-    Phase 4                 :         p4, 2026-06-02, 2026-06-15
-    Phase 5                 :         p5, 2026-06-16, 2026-06-30
-    Phase 6                 :         p6, 2026-07-01, 2026-07-15
+    {Phase 3}                          :         p3, {start}, {end}
+    {Phase 4}                          :         p4, {start}, {end}
+    {Phase 5}                          :         p5, {start}, {end}
+    {Phase 6}                          :         p6, {start}, {end}
 ```
 
 > _Tip: keep this Mermaid diagram simple — partners read it on phones too._
@@ -81,10 +81,10 @@ gantt
 
 | What | Number | Plain-English meaning |
 |------|-------:|------------------------|
-| {e.g. Files updated} | {e.g. 110} | {e.g. About the same as renaming every chapter heading in a 110-chapter book — by hand, carefully, without changing the story.} |
-| {e.g. Tests passing} | {e.g. 331 / 331} | {e.g. Every automatic safety check still works. Like every smoke detector in the house still beeping when it should.} |
-| {e.g. Visible bugs introduced} | {e.g. 0} | {e.g. Zero things broke for users. That's the goal of "boring" work like this.} |
-| {e.g. Build time} | {e.g. 7.7 seconds} | {e.g. Faster than making instant noodles. The whole site rebuilds in under 8 seconds.} |
+| {e.g. Files updated}              | {N}      | {everyday-language meaning, with an analogy if useful} |
+| {e.g. Tests passing}              | {X / Y}  | {what "every test passing" means in practice} |
+| {e.g. Visible bugs introduced}    | {0}      | {plain-language interpretation of zero impact} |
+| {e.g. Build time / load time}     | {value}  | {analogy: "faster than X" / "about as long as Y"} |
 
 ---
 
@@ -106,14 +106,14 @@ gantt
 
 > _Each entry: term in bold, then a sentence anyone could understand._
 
-- **Bootstrap** — a popular kit of pre-made styling and components that
-  websites use, so that every site doesn't have to build buttons and
-  layouts from scratch. Like LEGO blocks for web pages.
-- **jQuery** — an old helper library websites use to make things move and
-  react when you click. Modern websites have built-in tools for that now,
-  so we're switching over.
-- **Build** — turning the source code into the actual website files that
-  load in your browser. Like turning a recipe into a meal.
+- **{Term 1}** — plain-English definition with an analogy. Aim for one a
+  non-technical reader could repeat to a friend.
+- **{Term 2}** — same.
+- **{Term 3}** — same.
+
+{Worked examples — "Bootstrap", "jQuery", "Build" — are preserved in
+`.windsurf/_templates/examples/stakeholder-report__sxe-bootstrap.md` for
+reference.}
 
 ---
 

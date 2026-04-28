@@ -1,6 +1,6 @@
 # AI Workflows — How to Use
 
-This document explains the available AI workflows for the SXE User Frontend project. These workflows automate the development process, documentation and review.
+This document explains the available AI workflows in this global Windsurf agentic-SDD setup. These workflows automate the development process, documentation, and review for any host project that adopts them — paths and project-specific commands are placeholders that resolve at the host project's level (via `docs/LOCAL_SETUP.md` or a project-local `.windsurf/overrides/`).
 
 ---
 

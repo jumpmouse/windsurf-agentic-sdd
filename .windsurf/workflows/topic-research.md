@@ -55,9 +55,9 @@ Read and internalize the skill file:
 
 // turbo
 Read the full ticket:
-- `docs/app-update-v21/tickets/{TICKET_ID}__*.md`
+- `docs/{TOPIC_SLUG}/tickets/{TICKET_ID}__*.md`
 - Any dependency ticket reports referenced in the spec
-- Relevant specs from `docs/app-update-v21/specs/`
+- Relevant specs from `docs/{TOPIC_SLUG}/specs/`
 
 Extract:
 - All files mentioned in the ticket

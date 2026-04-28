@@ -94,7 +94,7 @@ Quick code-reviewer-mindset review of all changes for this ticket:
 - Verify no accidental files were modified outside scope
 - Confirm all changes align with ticket spec and guardrails
 - Confirm the verification report's quality gate is all ✅
-- Confirm any inline markers (e.g., `BOOTSTRAP5-COMPAT`) map 1:1 to inventory
+- Confirm any inline shim markers (if any) map 1:1 to their inventory file
 
 If issues found, fix minor ones immediately. For scope questions, ask user.
 
@@ -103,8 +103,8 @@ If issues found, fix minor ones immediately. For scope questions, ask user.
 Identify **logical commit groups** for the code changes. Good grouping
 heuristics:
 
-- **Build / config changes** — `angular.json`, `package.json`, `tsconfig.*`,
-  global style shims in `src/styles.scss`
+- **Build / config changes** — build-tool config, dependency manifest /
+  lockfile, type-config, global style or runtime initialization files
 - **Mass mechanical changes** — utility renames across many files (one
   commit)
 - **Localized behavioral changes** — per-feature refactors (one commit per
@@ -283,5 +283,5 @@ two-pass editing. If not, accept a minor follow-up amend here.)
 - If verification wasn't run, stop and recommend `/topic-verify` first.
 - The Completion Report should be standalone — readable by someone who didn't
   follow the conversation.
-- Always verify `ng build` and `ng test` pass before creating commits (they
+- Always verify the project's build (`{BUILD_COMMAND}`) and tests (`{TEST_COMMAND}`) pass before creating commits (they
   should have already passed via `/topic-verify`).

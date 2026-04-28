@@ -1,3 +1,8 @@
+---
+name: spec-author
+description: Activate when authoring or updating spec files (Epic Brief, Codebase Investigation, Architecture Spec, Core Flows, Implementation Spec, Execution Plan), running /topic-specs-from-research, reviewing spec completeness before ticket generation, or splitting a single all-in-one plan into the 5 canonical specs. Enforces evidence-grounded claims, traceable spec chains, and measured sizing.
+---
+
 # Spec Author Skill
 
 ## 🌐 Project Override Hook

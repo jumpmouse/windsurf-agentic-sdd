@@ -1,6 +1,6 @@
 # Progress Report — {YYYY-MM-DD}
 
-**Project:** {PROJECT_NAME}  
+**Project:** SXE User Frontend — Angular 15 → 21 Upgrade  
 **Branch:** `{branch_name}`  
 **Status:** {On track / At risk / Blocked}  
 

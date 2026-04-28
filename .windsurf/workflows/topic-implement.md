@@ -55,7 +55,7 @@ Read and internalize the skill file:
 
 // turbo
 Read end-to-end:
-- `docs/app-update-v21/tickets/{TICKET_ID}__*.md` — this IS the implementation plan
+- `docs/{TOPIC_SLUG}/tickets/{TICKET_ID}__*.md` — this IS the implementation plan
 - Dependency tickets' reports if needed
 - Research findings from conversation (if `/topic-research` was run)
 
@@ -68,7 +68,7 @@ Extract:
 ### 2. Pre-Implementation Check
 
 Before writing any code:
-1. Verify correct git branch: `feature/app-upgrade-to-v21`
+1. Verify you are on the correct feature branch for this topic (the host project's convention applies; if unclear, ASK)
 2. Verify referenced files exist and match expected state
 3. Check for uncommitted changes from other work
 4. If research was done, check that findings don't conflict with ticket steps
@@ -93,10 +93,12 @@ For each step in the ticket's "Detailed Steps" section (sequentially, never skip
 
 ### 4. Ongoing Verification
 
-After every 2-3 steps, run:
+After every 2-3 steps, run the project's build command (defined by the host
+project — typically captured as `{BUILD_COMMAND}` in `docs/LOCAL_SETUP.md` or
+in a project-local override of this workflow):
+
 ```bash
-# In /Users/milosbr/projects/shakticoin/sxe-user-frontend
-npx ng build
+{BUILD_COMMAND}
 ```
 
 If build fails, fix before proceeding.
@@ -112,9 +114,11 @@ After all steps complete:
 - [ ] AC3: {description} — ⚠️ {issue or question}
 ```
 
-Also run full test suite:
+Also run the project's full test suite (defined by the host project as
+`{TEST_COMMAND}`):
+
 ```bash
-npx ng test --no-watch --browsers=ChromeHeadless
+{TEST_COMMAND}
 ```
 
 ### 6. Report

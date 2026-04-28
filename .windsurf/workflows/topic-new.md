@@ -219,7 +219,7 @@ If `docs/WORK_LOG.md` doesn't exist yet, create it with a top-level heading
 ## Notes
 
 - This creates the STRUCTURE only — no tickets, no research
-- The topic structure mirrors `docs/app-update-v21/` exactly
+- The topic structure follows the layout defined in this workflow (see "Topic Structure" section above)
 - Each topic is self-contained with its own changelog, tickets, and reports
 - For work on a topic, use `/kickoff` to work on tickets of the topic
 - For other topics, the same ticket-based workflow pattern can be adapted
