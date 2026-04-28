@@ -22,7 +22,7 @@ speed-measure-plugin.json
 *.launch
 .settings/
 *.sublime-workspace
-# .windsurf/_archive
+.windsurf/_archive
 
 # IDE - VSCode
 .vscode/*
