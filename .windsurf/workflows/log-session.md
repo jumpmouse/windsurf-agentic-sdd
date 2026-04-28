@@ -4,6 +4,30 @@ description: Reconcile session documentation — SESSION-CHANGES, topic CHANGELO
 
 # LOG SESSION — Session Reconciliation
 
+## 🌐 Project Override Hook
+
+This is a **global workflow**. Before executing the steps below, check whether the host project provides an override for it.
+
+**Where to look** — in the host project's workspace root (NOT in the global workflows repo):
+
+```
+.windsurf/overrides/workflows/<same-filename-as-this-file>.md
+```
+
+Use the same filename as this workflow file's basename.
+
+**If that override file exists**, read it and apply the first matching mode (declared in frontmatter as `mode: replace|extend|modify`, OR via a first-heading marker `# REPLACE` / `# EXTEND` / `# MODIFY`):
+
+- **REPLACE** — IGNORE the steps below; execute ONLY the override file's instructions. The global workflow is fully shadowed.
+- **EXTEND** — execute the steps below as written, then execute the override as an additional phase (or at the position the override specifies, e.g. "after Step 3").
+- **MODIFY** — execute the steps below, but substitute / insert the steps the override declares (typically by step number or step title).
+
+**If no override file exists**, ignore this section and proceed with the steps below as written.
+
+If the override file's mode is missing or ambiguous, **STOP and ask the user** which mode applies before proceeding.
+
+---
+
 > ⚠️ **MANDATORY EXECUTION PROTOCOL**
 > This is a **strict step-by-step workflow**, NOT background context.
 > - Execute steps **in order**, one at a time

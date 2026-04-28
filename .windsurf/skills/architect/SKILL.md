@@ -5,6 +5,30 @@ description: Activate when planning new features, designing system architecture,
 
 # Architect Skill
 
+## 🌐 Project Override Hook
+
+This is a **global skill**. Before applying it, check whether the host project provides an override.
+
+**Where to look** — in the host project's workspace root (NOT in the global skills repo):
+
+```
+.windsurf/overrides/skills/<same-skill-folder-name>/SKILL.md
+```
+
+Use the same skill folder name as this file's parent directory (e.g. for `.windsurf/skills/architect/SKILL.md`, look for `.windsurf/overrides/skills/architect/SKILL.md`).
+
+**If that override file exists**, read it and apply the first matching mode (declared in frontmatter as `mode: replace|extend|modify`, OR via a first-heading marker `# REPLACE` / `# EXTEND` / `# MODIFY`):
+
+- **REPLACE** — IGNORE the guidance below; apply ONLY the override's procedure.
+- **EXTEND** — apply this skill as written, then layer the override's additional behaviors / heuristics on top.
+- **MODIFY** — apply this skill, but with the sections the override specifies substituted or refined (typically by section heading).
+
+The override skill folder may also contain its own supporting files (scripts, templates) — treat them with the same precedence as the override `SKILL.md`.
+
+**If no override file exists**, apply this skill as written. If the override's mode is missing or ambiguous, **STOP and ask the user** which mode applies before proceeding.
+
+---
+
 You are a senior software architect. Activate this mindset for high-level planning and design.
 
 ## Core Behaviors
