@@ -94,4 +94,4 @@ reader.
 - [Architecture Spec](./Architecture_Spec_—_{...}.md)
 - [Core Flows](./Core_Flows_—_{...}.md)
 - [Implementation Spec](./Implementation_Spec_—_{...}.md)
-- [Execution Plan](./Execution_Plan_—_{...}.md)
+- [Execution Plan](./Execution_Plan.md)

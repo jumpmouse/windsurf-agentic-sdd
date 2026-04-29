@@ -5,7 +5,7 @@
 **Ticket spec:** [{TICKET_ID}](../tickets/{TICKET_FILENAME}.md)
 **Date:** {YYYY-MM-DD}
 **Branch:** `{branch_name}`
-**Verifier mindset:** @code-reviewer
+**Verifier mindset:** `@Personas:verifier`
 **Outcome:** {✅ PASS | ⚠️ PASS WITH FIXES | ❌ FAIL}
 
 ---

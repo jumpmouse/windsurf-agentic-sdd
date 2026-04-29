@@ -40,7 +40,7 @@ Clearly frame the boundary — this ticket covers X, not Y.}
 ## References
 
 - {Link to parent spec, e.g. `spec:...` external ref or relative path to
-  `specs/Execution_Plan_—_*.md` that produced this ticket}
+  `specs/Execution_Plan.md` that produced this ticket}
 - {Link to `specs/Implementation_Spec_—_*.md` section that maps this ticket's files}
 - {Link to `specs/Architecture_Spec_—_*.md` decision that drives this ticket, if any}
 - **Depends on:** {TICKET_ID(s) that must be complete before this one starts; "none" if independent}

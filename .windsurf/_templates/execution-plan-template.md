@@ -102,8 +102,8 @@ N files where each edit is trivial.}
 
 ## 6. Ticket Inventory
 
-One row per ticket to be generated. This table is the direct input to the
-`/topic-specs-from-research` ticket-generation step.
+One row per ticket to be generated. This table is the direct input to
+`/topic-tickets-from-plan`, which generates one ticket spec file per row.
 
 | Ticket ID | Title | Scope | Owner Workstream | Risk | Est. Lines |
 |-----------|-------|-------|------------------|:----:|-----------:|
